@@ -1,4 +1,5 @@
 const axios = require('axios');
+require('dotenv').config()
 
 const options = {
   method: 'GET',
@@ -7,8 +8,8 @@ const options = {
     link: 'https://www.instagram.com/p/CqIbCzYMi5C/'
   },
   headers: {
-    'X-RapidAPI-Key': 'dc97e2e59cmsh44cafa16692679bp1a3336jsn2abe7313060f',
-    'X-RapidAPI-Host': 'instagram-looter2.p.rapidapi.com'
+    'X-RapidAPI-Key': process.env.RAPID_API_KEY,
+    'X-RapidAPI-Host': process.env.RAPID_API_HOST
   }
 };
 
