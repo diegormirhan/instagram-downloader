@@ -1,4 +1,5 @@
 const axios = require('axios');
+const bot = require('./bot');
 require('dotenv').config();
 
 //API
