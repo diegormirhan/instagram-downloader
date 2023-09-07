@@ -10,7 +10,7 @@ const insta = require('./controllers/bot');
 //run the server
 const start = async () => {
     try {
-        await app.listen({ port: 3000 });
+        await app.listen(process.env.PORT || 3000);
     } catch (err) {
         fastify.log.error(err);
         process.exit(1)
