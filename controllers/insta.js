@@ -1,5 +1,4 @@
 const axios = require('axios');
-const bot = require('./bot');
 require('dotenv').config();
 
 //API
@@ -20,12 +19,21 @@ const instaScrapper = async (url) => {
     }
   };
 
-    try {
-      const response = await axios.request(options);
-        return response.data.data;
-    } catch (error) {
-        return error;
-    }
+  try {
+    const response = await axios.request(options);
+      return response.data.data.medias;
+  } catch (error) {
+      return error;
   }
+}
 
-module.exports = instaScrapper;
+(async () => {
+  try {
+    const result = await instaScrapper('https://www.instagram.com/p/CqIbCzYMi5C/');
+    console.log(result);
+  } catch (error) {
+    console.error(error);
+  }
+})();
+
+module.exports = instaScrapper
