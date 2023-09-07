@@ -1,5 +1,5 @@
 const TelegramBot = require('node-telegram-bot-api');
-const { instaScrapper } = require('./insta')
+const instaScrapper = require('./insta')
 require('dotenv').config()
 
 // replace the value below with the Telegram token you receive from @BotFather
@@ -13,29 +13,30 @@ bot.onText(/\/start/, (msg) => {
   bot.sendMessage(chatId, "Send me any Instagram link(except for stories) below and I'll send it back to you as a media file");
 });
 
-bot.on('message', (msg) => {
-  if (msg.text && msg.text.startsWith("https://instagram.com/")) {
+bot.on('message', async (msg) => {
+  if (msg.text !== '/start' && msg.text.includes('https://www.instagram.com/')) {
     try {
-      const post = instaScrapper(msg.text)
+      bot.sendMessage(msg.chat.id, 'Processing your link, please wait...')
+      const post = await instaScrapper(msg.text)
       console.log(post);
       const chatId = msg.chat.id;
       if (post.length > 0) {
         post.forEach(media => {
-          if (media.type === 'photo') {
+          if (media.type === 'image') {
             bot.sendPhoto(chatId, media.link);
           }
           else if (media.type === 'video') {
             bot.sendVideo(chatId, media.link);
           } else {
-            bot.sendMessage(chatId, 'Houve um erro ao enviar o seu link, tente novamente mais tarde')
+            bot.sendMessage(chatId, 'There was an error sending your link, please try again later')
           } 
         })
       } else {
-        bot.sendMessage(chatId, 'Não foi possível encontrar a mídia desse link.')
+        bot.sendMessage(chatId, 'Could not find the media for that link.')
       }
     } catch (err) {
       console.log(err);
-      bot.sendMessage(chatId, 'Ocorreu um erro ao processar o link. Tente novamente!')
+      bot.sendMessage(chatId, 'An error occurred while processing the link. Try again!')
     }
   }
 

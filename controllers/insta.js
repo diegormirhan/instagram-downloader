@@ -27,13 +27,14 @@ const instaScrapper = async (url) => {
   }
 }
 
-(async () => {
+/* (async () => {
   try {
     const result = await instaScrapper('https://www.instagram.com/p/CqIbCzYMi5C/');
+    
     console.log(result);
   } catch (error) {
     console.error(error);
   }
 })();
-
+ */
 module.exports = instaScrapper
