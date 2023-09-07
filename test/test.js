@@ -20,6 +20,7 @@ const test = async () => {
             console.log(media.link)
         });
         console.log(response.data.data)
+
     } catch (error) {
         console.error(error);
     }
