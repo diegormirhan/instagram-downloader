@@ -1,34 +1,42 @@
 const TelegramBot = require('node-telegram-bot-api');
+const { instaScrapper } = require('./insta')
 require('dotenv').config()
 
 // replace the value below with the Telegram token you receive from @BotFather
 const token = process.env.TELEGRAM_API;
 
 // Create a bot that uses 'polling' to fetch new updates
-const bot = new TelegramBot(token, {polling: true});
+const bot = new TelegramBot(token, { polling: true });
 
-  // Matches "/echo [whatever]"
-  bot.onText(/\/echo (.+)/, (msg, match) => {
-    // 'msg' is the received Message from Telegram
-    // 'match' is the result of executing the regexp above on the text content
-    // of the message
-  
-    const chatId = msg.chat.id;
-    const resp = match[1]; // the captured "whatever"
-  
-    // send back the matched "whatever" to the chat
-    bot.sendMessage(chatId, 'esse é um teste');
-  });  
-
-
-// Listen for any kind of message. There are different kinds of
-// messages.
-/* bot.on('message', (msg) => {
+bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
+  bot.sendMessage(chatId, "Send me any Instagram link(except for stories) below and I'll send it back to you as a media file");
+});
 
-  // send a message to the chat acknowledging receipt of their message
-  bot.sendVideo(chatId, 'https://instagram.fvno2-1.fna.fbcdn.net/v/t66.30100-16/122248807_260596793420753_5806150694878979722_n.mp4?_nc_ht=instagram.fvno2-1.fna.fbcdn.net&_nc_cat=105&_nc_ohc=fph9I7P8inQAX-cWu7C&edm=AP_V10EBAAAA&ccb=7-5&oh=00_AfBTWyhVLkeFmyQVCvRfLkzrgGTqeefu6OCdfjYWVZdePA&oe=64F7BD3C&_nc_sid=2999b8');
-}); */
+bot.on('message', (msg) => {
+  if (msg.text && msg.text.startsWith("https://instagram.com/")) {
+    try {
+      const post = instaScrapper(msg.text)
+      console.log(post);
+      const chatId = msg.chat.id;
+      if (post.length > 0) {
+        post.forEach(media => {
+          if (media.type === 'photo') {
+            bot.sendPhoto(chatId, media.link);
+          }
+          else if (media.type === 'video') {
+            bot.sendVideo(chatId, media.link);
+          } else {
+            bot.sendMessage(chatId, 'Houve um erro ao enviar o seu link, tente novamente mais tarde')
+          } 
+        })
+      } else {
+        bot.sendMessage(chatId, 'Não foi possível encontrar a mídia desse link.')
+      }
+    } catch (err) {
+      console.log(err);
+      bot.sendMessage(chatId, 'Ocorreu um erro ao processar o link. Tente novamente!')
+    }
+  }
 
-
-// module.exports = resBot
+})
