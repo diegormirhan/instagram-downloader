@@ -13,6 +13,7 @@ const options = {
   }
 };
 
+// Run the tests
 /* const test = async () => {
     try {
         const response = await axios.request(options);
