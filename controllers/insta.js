@@ -1,7 +1,7 @@
 const axios = require('axios');
 require('dotenv').config();
 
-//API
+//API.
 const APIKey = process.env.RAPID_API_KEY
 const APIHost = process.env.RAPID_API_HOST
 
