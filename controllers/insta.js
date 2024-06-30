@@ -21,7 +21,7 @@ const instaScrapper = async (url) => {
 
   try {
     const response = await axios.request(options);
-      return response.data.data.medias;
+      return response.data.data;
   } catch (error) {
       return error;
   }

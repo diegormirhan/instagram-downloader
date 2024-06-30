@@ -17,11 +17,11 @@ bot.on('message', async (msg) => {
   if (msg.text !== '/start' && msg.text.includes('https://www.instagram.com/')) {
     try {
       bot.sendMessage(msg.chat.id, 'Processing your link, please wait...')
-      const post = await instaScrapper(msg.text)
+      const post = await instaScrapper(msg.text) // .medias, .caption
       console.log(post);
       const chatId = msg.chat.id;
-      if (post.length > 0) {
-        post.forEach(media => {
+      if (post.medias.length > 0) {
+        post.medias.forEach(media => {
           if (media.type === 'image') {
             bot.sendPhoto(chatId, media.link);
           }
@@ -34,6 +34,13 @@ bot.on('message', async (msg) => {
       } else {
         bot.sendMessage(chatId, 'Could not find the media for that link.')
       }
+
+      const delay = ms => new Promise(resolve => {
+        setTimeout(resolve, ms);
+        bot.sendMessage(chatId, post.caption);
+      });
+      await delay(2000);
+      
     } catch (err) {
       console.log(err);
       bot.sendMessage(chatId, 'An error occurred while processing the link. Try again!')
